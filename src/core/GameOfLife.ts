@@ -1,7 +1,4 @@
-export enum CellState {
-  DEAD = 0,
-  ALIVE = 1,
-}
+import { CellState } from './Cell';
 
 export class GameOfLife {
   grid: CellState[][];
@@ -15,6 +12,9 @@ export class GameOfLife {
     this.grid.forEach((row, rowIndex) => {
       row.forEach((cell, colIndex) => {
         const numberOfAliveNeighbours = this.countAliveNeighbours(rowIndex, colIndex);
+        // NOTA: Se pregunta el estado de la célula y decidiendo desde fuera qué le pasa.
+        // Esto viola el principio "Tell, Don't Ask":
+        // --> en lugar de pedirle datos a un artefacto para tomar decisiones, deberías decirle qué hacer y que él sepa cómo hacerlo.
         if (cell === CellState.ALIVE && numberOfAliveNeighbours === 2) {
           newGrid[rowIndex][colIndex] = CellState.ALIVE;
         } else if (cell === CellState.ALIVE && (numberOfAliveNeighbours < 2 || numberOfAliveNeighbours > 3)) {

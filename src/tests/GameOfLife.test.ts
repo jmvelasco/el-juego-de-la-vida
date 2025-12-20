@@ -1,6 +1,7 @@
 import { expect, it } from '@jest/globals';
 
-import { CellState, GameOfLife } from '../core/GameOfLife';
+import { CellState } from '../core/Cell';
+import { GameOfLife } from '../core/GameOfLife';
 describe('game of life', () => {
   it('universe containing one cell alive turns to one cell dead', () => {
     const gameOfLife = new GameOfLife([[CellState.ALIVE]]);
