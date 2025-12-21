@@ -6,14 +6,15 @@ export enum CellState {
 export class Cell {
   constructor(private state: CellState) {}
 
-  regenerate(numberOfAliveNeighbours: number) {
-    if (this.state === CellState.ALIVE && numberOfAliveNeighbours === 2) {
-      this.state = CellState.ALIVE;
-    } else if (this.state === CellState.ALIVE && (numberOfAliveNeighbours < 2 || numberOfAliveNeighbours > 3)) {
-      this.state = CellState.DEAD;
-    } else if (this.state === CellState.DEAD && numberOfAliveNeighbours === 3) {
-      this.state = CellState.ALIVE;
+  nextState(numberOfAliveNeighbours: number) {
+    if (this.isAlive() && numberOfAliveNeighbours === 2) {
+      return CellState.ALIVE;
+    } else if (this.isAlive() && (numberOfAliveNeighbours < 2 || numberOfAliveNeighbours > 3)) {
+      return CellState.DEAD;
+    } else if (!this.isAlive() && numberOfAliveNeighbours === 3) {
+      return CellState.ALIVE;
     }
+    return this.isAlive() ? CellState.ALIVE : CellState.DEAD;
   }
 
   isAlive() {
