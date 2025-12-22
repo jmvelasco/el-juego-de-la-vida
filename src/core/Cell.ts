@@ -7,16 +7,16 @@ export class Cell {
   constructor(private state: CellState) {}
 
   nextState(numberOfAliveNeighbours: number) {
-    return this.aliveCellSurvive(numberOfAliveNeighbours) || this.deadCellReborn(numberOfAliveNeighbours)
+    return this.aliveCellWillSurvive(numberOfAliveNeighbours) || this.deadCellWillReborn(numberOfAliveNeighbours)
       ? new Cell(CellState.ALIVE)
       : new Cell(CellState.DEAD);
   }
 
-  private deadCellReborn(numberOfAliveNeighbours: number): boolean {
+  private deadCellWillReborn(numberOfAliveNeighbours: number): boolean {
     return !this.isAlive() && this.reborn(numberOfAliveNeighbours);
   }
 
-  private aliveCellSurvive(numberOfAliveNeighbours: number) {
+  private aliveCellWillSurvive(numberOfAliveNeighbours: number) {
     return this.isAlive() && this.stable(numberOfAliveNeighbours);
   }
 
