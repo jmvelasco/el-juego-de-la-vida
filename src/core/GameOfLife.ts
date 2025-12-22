@@ -9,7 +9,7 @@ export class GameOfLife {
     const nextGrid = this.grid.map((rows, rowIndex) => {
       return rows.map((cell, colIndex) => {
         const numberOfAliveNeighbours = this.countAliveNeighbours(rowIndex, colIndex);
-        return new Cell(cell.nextState(numberOfAliveNeighbours));
+        return cell.nextState(numberOfAliveNeighbours);
       });
     });
     this.grid = nextGrid;
