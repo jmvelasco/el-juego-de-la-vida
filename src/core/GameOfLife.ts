@@ -1,10 +1,8 @@
 import { Cell } from './Cell';
 
 export class GameOfLife {
-  grid: Cell[][];
-  constructor(grid: Cell[][]) {
-    this.grid = grid;
-  }
+  constructor(private readonly grid: Cell[][]) {}
+
   generateNextState() {
     const nextGrid = this.grid.map((rows, rowIndex) => {
       return rows.map((cell, colIndex) => {
@@ -12,7 +10,7 @@ export class GameOfLife {
         return cell.nextState(numberOfAliveNeighbours);
       });
     });
-    this.grid = nextGrid;
+    return new GameOfLife(nextGrid);
   }
 
   private countAliveNeighbours(rowIndex: number, colIndex: number): number {
