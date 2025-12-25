@@ -6,7 +6,7 @@ export enum CellState {
 export class Cell {
   constructor(private state: CellState) {}
 
-  nextState(numberOfAliveNeighbours: number) {
+  regenerate(numberOfAliveNeighbours: number) {
     return this.aliveCellWillSurvive(numberOfAliveNeighbours) || this.deadCellWillReborn(numberOfAliveNeighbours)
       ? new Cell(CellState.ALIVE)
       : new Cell(CellState.DEAD);
