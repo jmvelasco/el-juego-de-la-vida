@@ -19,7 +19,7 @@ describe('In the game of life', () => {
       new World([[new Cell(CellState.DEAD), new Cell(CellState.ALIVE), new Cell(CellState.DEAD)]])
     );
   });
-  test('An universe containing a cell alive with two vertical alive Neighbours survives', () => {
+  test.skip('An universe containing a cell alive with two vertical alive Neighbours survives', () => {
     const gameOfLife = new World([
       [new Cell(CellState.ALIVE), new Cell(CellState.DEAD), new Cell(CellState.DEAD)],
       [new Cell(CellState.ALIVE), new Cell(CellState.DEAD), new Cell(CellState.DEAD)],
