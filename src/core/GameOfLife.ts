@@ -19,9 +19,9 @@ export class World {
     const nextRow = this.grid[rowIndex + 1];
 
     return (
-      this.countRowNeighbours(colIndex, previousRow) +
+      this.countSurroundingRowNeighbours(colIndex, previousRow) +
       this.countRowNeighbours(colIndex, sameRow) +
-      this.countRowNeighbours(colIndex, nextRow)
+      this.countSurroundingRowNeighbours(colIndex, nextRow)
     );
   }
 
@@ -29,6 +29,16 @@ export class World {
     let numberOfAliveNeighbours = 0;
     for (let col = colIndex - 1; col <= colIndex + 1; col++) {
       if (col !== colIndex && rowCells?.[col]?.isAlive()) {
+        numberOfAliveNeighbours++;
+      }
+    }
+    return numberOfAliveNeighbours;
+  }
+
+  private countSurroundingRowNeighbours(colIndex: number, rowCells: Cell[]) {
+    let numberOfAliveNeighbours = 0;
+    for (let col = colIndex - 1; col <= colIndex + 1; col++) {
+      if (rowCells?.[col]?.isAlive()) {
         numberOfAliveNeighbours++;
       }
     }
