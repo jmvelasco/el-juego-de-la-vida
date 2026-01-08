@@ -1,32 +1,23 @@
-# TypeScript Template with ESLint, Prettier & Jest
+# El Juego de la Vida - React & TypeScript
 
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue.svg)](https://www.typescriptlang.org/)
-[![ESLint](https://img.shields.io/badge/ESLint-9.32-4B32C3.svg)](https://eslint.org/)
-[![Prettier](https://img.shields.io/badge/Prettier-3.6-F7B93E.svg)](https://prettier.io/)
-[![Jest](https://img.shields.io/badge/Jest-30.0-C21325.svg)](https://jestjs.io/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue.svg)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-19.0-61DAFB.svg)](https://react.dev/)
+[![ESLint](https://img.shields.io/badge/ESLint-9.39-4B32C3.svg)](https://eslint.org/)
+[![Prettier](https://img.shields.io/badge/Prettier-3.7-F7B93E.svg)](https://prettier.io/)
+[![Jest](https://img.shields.io/badge/Jest-30.2-C21325.svg)](https://jestjs.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A modern, production-ready TypeScript template with integrated linting, formatting, and testing. Perfect for starting new projects or practicing katas in our Software Craftsmanship courses.
-
-## 📚 About This Template
-
-This template is used in the following courses at [Software Crafters](https://softwarecrafters.io):
-
-- **🧪 Testing Sostenible** - Sustainable Testing
-- **🏗️ Diseño Sostenible** - Sustainable Design
-- **♻️ Refactoring Sostenible** - Sustainable Refactoring
-
-Learn more about our courses and workshops at [softwarecrafters.io](https://softwarecrafters.io)
+A modern, production-ready React application with TypeScript, integrated linting, formatting, and testing.
 
 ## ✨ Features
 
-- **TypeScript 5.8** - Latest TypeScript with strict mode enabled
-- **ESLint 9** - Flat config system with TypeScript support
-- **Prettier 3.6** - Opinionated code formatter
-- **Jest 30** - Delightful JavaScript Testing Framework with coverage thresholds
-- **Husky 9** - Git hooks made easy (pre-commit & pre-push)
-- **lint-staged** - Run linters on git staged files
-- **Strict TypeScript** - Comprehensive type checking for better code quality
+- **React 19** - Utilizing the latest React features and concurrent rendering
+- **TypeScript 5.9** - Strict mode enabled for maximum type safety
+- **ESLint 9** - Flat config system with TypeScript & React support
+- **Prettier 3.7** - Opinionated code formatter
+- **Jest 30** - Delightful JavaScript Testing Framework
+- **Husky 9** & **lint-staged** - Git hooks for code quality
+- **esbuild** - Lightning fast bundling for the UI
 
 ## 🚀 Quick Start
 
@@ -37,118 +28,92 @@ Learn more about our courses and workshops at [softwarecrafters.io](https://soft
 
 ### Installation
 
-#### Option 1: Use as GitHub Template (Recommended)
-
-1. Click the **"Use this template"** button at the top of the GitHub repository
-2. Create a new repository from this template
-3. Clone your new repository:
-
 ```bash
-git clone https://github.com/YOUR-USERNAME/YOUR-REPO-NAME.git
-cd YOUR-REPO-NAME
-
-# Install dependencies
+git clone https://github.com/YOUR-USERNAME/el-juego-de-la-vida.git
+cd el-juego-de-la-vida
 npm install
-
-# Run tests to verify everything works
-npm test
 ```
 
-#### Option 2: Clone Directly
+### Running the Application
 
 ```bash
-# Clone this repository
-git clone https://github.com/softwarecrafters-io/ts-eslint-prettier-jest.git
-cd ts-eslint-prettier-jest
-
-# Remove the original git history (optional)
-rm -rf .git
-git init
-
-# Install dependencies
-npm install
-
-# Run tests to verify everything works
-npm test
+npm run dev:ui    # Builds and serves the UI at http://localhost:3000
 ```
 
-#### Option 3: Download as ZIP
+## 🎓 Educational Guide: Adding React to TypeScript
 
-1. Download the repository as ZIP from GitHub
-2. Extract the files
-3. Install dependencies:
+This project evolved from a pure TypeScript template to a React application. Here is the step-by-step guide of the additions made:
+
+### 1. Basic Dependencies
+First, we added the core React libraries:
+```bash
+npm install react react-dom
+```
+
+### 2. TypeScript Configuration for React
+To enable JSX and browser support, `tsconfig.json` was updated:
+
+- **`jsx`: "react-jsx"**: Enables the modern JSX transform (no need to import React in every file).
+- **`lib`: ["ES2020", "DOM"]**: Added `"DOM"` so TypeScript recognizes global variables like `document` and `window`.
+
+### 3. Type Definitions
+React is written in JavaScript, so we need type definitions for TypeScript to understand it:
+```bash
+npm install --save-dev @types/react @types/react-dom
+```
+
+### 4. Entry Point & Component
+We created `src/index.tsx` as the entry point:
+- Used `createRoot` from `react-dom/client` for React 18+ rendering.
+- Defined components using `JSX.Element` return types.
+
+### 5. Build Pipeline (esbuild)
+Since browsers cannot run `.tsx` files directly, we added `esbuild` for fast bundling:
+```bash
+# package.json script
+"build:ui": "esbuild src/index.tsx --bundle --outfile=dist/bundle.js"
+```
+
+### 6. Live Reload (Refresco Automático)
+To improve development speed, we added the ability to see changes in the browser automatically:
+
+- **Dependencies**: Added `live-server` for the reloading server and `npm-run-all` to run multiple tasks.
+- **`build:ui:watch`**: Added `--watch` to the `esbuild` command so it rebuilds on every save.
+- **`serve`**: Configured `live-server` to serve the project and watch for file changes to refresh the browser.
+- **`dev:ui`**: Uses `npm-run-all --parallel` to run both the watcher and the server at the same time.
 
 ```bash
-cd ts-eslint-prettier-jest
-npm install
-npm test
+npm run dev:ui    # Start developing with Live Reload!
+```
+
+### 7. UI Testing (Análisis de QA)
+Como expertos en QA, detectamos la necesidad de validar que la capa de UI (React) se integra correctamente con el motor:
+
+- **`jsdom`**: Cambiamos el `testEnvironment` en `jest.config.js` de `node` a `jsdom` para simular un navegador en los tests.
+- **React Testing Library**: Instalamos esta librería para testear componentes desde la perspectiva del usuario (qué se ve en el DOM).
+- **Match Tokens**: Actualizamos la configuración de Jest para reconocer archivos `.tsx` y reportar cobertura sobre ellos.
+
+```bash
+npm test    # Ejecuta todos los tests, incluyendo el nuevo App.test.tsx
 ```
 
 ## 📋 Available Scripts
 
 ### Development
-
-```bash
-npm run dev              # Watch mode for TypeScript compilation
-npm run compile          # Type-check without emitting files
-npm run compile:watch    # Type-check in watch mode
-```
-
-### Building
-
-```bash
-npm run build           # Clean and compile TypeScript to JavaScript
-npm run clean           # Remove lib/ and coverage/ directories
-```
-
-### Linting & Formatting
-
-```bash
-npm run lint            # Run ESLint
-npm run lint:fix        # Run ESLint and auto-fix issues
-npm run format          # Check formatting with Prettier
-npm run format:check    # Verify code formatting
-npm run format:fix      # Format code with Prettier
-npm run analyze         # Run lint:fix + compile
-```
-
-### Testing
-
-```bash
-npm test                # Run tests with Jest
-npm run test:watch      # Run tests in watch mode
-npm run test:coverage   # Run tests with coverage report
-npm run test:ci         # Run tests in CI mode with coverage
-```
+- `npm run dev`: watch mode for TypeScript (lib output)
+- `npm run compile`: type-check without emitting
+- `npm run dev:ui`: build and serve the application locally
 
 ### Quality Assurance
-
-```bash
-npm run validate        # Run compile + lint + test (full check)
-```
-
-
-## ⚙️ Husky & lint-staged
-
-- **pre-commit**: 
-  - Runs ESLint and Prettier on staged TypeScript files (via lint-staged)
-  - Runs TypeScript type-checking on the entire project (compile)
-  - Blocks commit if there are type errors or unfixable linting issues
-- **pre-push**: 
-  - Runs full validation (compile + lint + test)
-  - Ensures all code is properly typed, linted, and tested before pushing
-
+- `npm run lint`: run ESLint
+- `npm run format:check`: verify code formatting
+- `npm test`: run tests with Jest
+- `npm run validate`: full check (compile + lint + test)
 
 ## 🤝 Contributing
 
-This template is maintained by [Software Crafters](https://softwarecrafters.io). Feel free to use it for your projects and katas!
+Maintained by [Software Crafters](https://softwarecrafters.io).
 
 ## 📄 License
 
 MIT © [Softwarecrafters.io](https://softwarecrafters.io)
-
----
-
-**Happy Coding!** 🚀
-
-For more information about our courses and training programs, visit [softwarecrafters.io](https://softwarecrafters.io)
