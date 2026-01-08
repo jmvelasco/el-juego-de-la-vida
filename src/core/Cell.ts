@@ -31,4 +31,8 @@ export class Cell {
   isAlive() {
     return this.state === CellState.ALIVE;
   }
+
+  render() {
+    return this.isAlive() ? 'X' : 'O';
+  }
 }

@@ -1,6 +1,6 @@
 import { expect } from '@jest/globals';
-import { Cell, CellState } from '../core/Cell';
-import { World } from '../core/GameOfLife';
+import { Cell, CellState } from '../../core/Cell';
+import { World } from '../../core/World';
 
 class Descriptor {
   static createCellRowFrom(descriptor: string): Cell[] {

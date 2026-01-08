@@ -3,8 +3,12 @@ import { Cell } from './Cell';
 export class World {
   constructor(private readonly grid: Cell[][]) {}
 
+  get cells(): Cell[][] {
+    return this.grid;
+  }
+
   generateNext() {
-    const nextGeneration = this.grid.map((rows, rowIndex) => {
+    const nextGeneration = this.cells.map((rows, rowIndex) => {
       return rows.map((cell, colIndex) => {
         const numberOfAliveNeighbours = this.countAliveNeighbours(rowIndex, colIndex);
         return cell.regenerate(numberOfAliveNeighbours);

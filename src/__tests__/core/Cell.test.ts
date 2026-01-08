@@ -1,4 +1,4 @@
-import { Cell, CellState } from '../core/Cell';
+import { Cell, CellState } from '../../core/Cell';
 
 describe('In the Game of Life, a Cell', () => {
   test('should be correctly instantiated with an initial state', () => {
