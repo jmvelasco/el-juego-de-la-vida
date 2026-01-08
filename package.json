@@ -2,7 +2,6 @@
   "name": "el-juego-de-la-vida",
   "version": "1.0.0",
   "description": "El Juego de la Vida",
-  "main": "lib/index.js",
   "scripts": {
     "prepare": "husky install",
     "dev": "tsc --watch",
@@ -31,7 +30,7 @@
     "upgrade": "ncu -i",
     "upgrade:all": "ncu -u"
   },
-  "author": "Softwarecrafters.io",
+  "author": "El Artesano del Byte",
   "license": "MIT",
   "devDependencies": {
     "@testing-library/dom": "^10.4.1",

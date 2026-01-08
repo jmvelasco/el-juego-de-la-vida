@@ -110,10 +110,9 @@ npm test    # Ejecuta todos los tests, incluyendo el nuevo App.test.tsx
 - `npm test`: run tests with Jest
 - `npm run validate`: full check (compile + lint + test)
 
-## 🤝 Contributing
 
-Maintained by [Software Crafters](https://softwarecrafters.io).
+Este proyecto fue iniciado a partir de la [plantilla de TypeScript de Software Crafters](https://github.com/softwarecrafters-io/ts-eslint-prettier-jest).
 
 ## 📄 License
 
-MIT © [Softwarecrafters.io](https://softwarecrafters.io)
+MIT © El Artesano del Byte
