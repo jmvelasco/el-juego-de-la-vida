@@ -1,4 +1,8 @@
-# El Juego de la Vida - React & TypeScript
+# Game of Life - React & TypeScript
+
+![Game of Life Animation](./GameOfLife.gif)
+
+This is a resolution of the famous **Kata Game of Life**, extended with a reactive interface to observe the evolution of patterns in real time.
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue.svg)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-19.0-61DAFB.svg)](https://react.dev/)
