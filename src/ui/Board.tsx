@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLifeWorldContext } from '../context/LifeWorldProvider';
 
-function Board(): React.ReactNode {
+const Board = (): React.ReactNode => {
   const { world, cellSize, speed } = useLifeWorldContext();
   const [currentWorld, setCurrentWorld] = useState(world);
 
@@ -13,19 +13,22 @@ function Board(): React.ReactNode {
     if (!currentWorld) return;
 
     const interval = setInterval(() => {
-      setCurrentWorld((prev) => prev?.generateNext());
+      setCurrentWorld((previousWorld) => previousWorld?.generateNext());
     }, speed * 1000);
 
     return () => clearInterval(interval);
   }, [currentWorld, speed]);
 
   useEffect(() => {
-    const worldIsDead = currentWorld?.cells.every((row) => row.every((cell) => !cell.isAlive()));
-    if (worldIsDead) {
-      setTimeout(() => {
-        setCurrentWorld(undefined);
-      }, 2000);
+    if (!currentWorld?.isDead()) {
+      return;
     }
+
+    const deathTimeout = setTimeout(() => {
+      setCurrentWorld(undefined);
+    }, 2000);
+
+    return () => clearTimeout(deathTimeout);
   }, [currentWorld]);
 
   if (!world) {
@@ -45,9 +48,9 @@ function Board(): React.ReactNode {
     <section data-testid="board">
       {currentWorld.cells.map((row, rowIndex) => (
         <div key={rowIndex} style={{ display: 'flex', gap: '0' }}>
-          {row.map((cell, colIndex) => (
+          {row.map((cell, columnIndex) => (
             <span
-              key={colIndex}
+              key={columnIndex}
               style={{
                 display: 'inline-block',
                 height: `${cellSize}px`,
@@ -61,6 +64,6 @@ function Board(): React.ReactNode {
       ))}
     </section>
   );
-}
+};
 
 export default Board;

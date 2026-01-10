@@ -4,12 +4,10 @@ import { World } from '../../core/World';
 
 class Descriptor {
   static createCellRowFrom(descriptor: string): Cell[] {
-    const cells = [];
-    for (const char of descriptor) {
+    return Array.from(descriptor).map((char) => {
       if (char !== '*' && char !== '-') throw new Error('No valid descriptor');
-      cells.push(new Cell(char === '*' ? CellState.ALIVE : CellState.DEAD));
-    }
-    return cells;
+      return new Cell(char === '*' ? CellState.alive : CellState.dead);
+    });
   }
 
   static createWorldFrom(rows: string[]): World {

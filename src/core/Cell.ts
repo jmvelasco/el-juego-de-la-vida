@@ -1,6 +1,6 @@
 export enum CellState {
-  DEAD = 0,
-  ALIVE = 1,
+  dead = 0,
+  alive = 1,
 }
 
 export class Cell {
@@ -8,8 +8,8 @@ export class Cell {
 
   regenerate(numberOfAliveNeighbours: number) {
     return this.aliveCellWillSurvive(numberOfAliveNeighbours) || this.deadCellWillReborn(numberOfAliveNeighbours)
-      ? new Cell(CellState.ALIVE)
-      : new Cell(CellState.DEAD);
+      ? new Cell(CellState.alive)
+      : new Cell(CellState.dead);
   }
 
   private deadCellWillReborn(numberOfAliveNeighbours: number): boolean {
@@ -29,7 +29,7 @@ export class Cell {
   }
 
   isAlive() {
-    return this.state === CellState.ALIVE;
+    return this.state === CellState.alive;
   }
 
   render() {

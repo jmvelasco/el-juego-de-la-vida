@@ -19,7 +19,7 @@ describe('Board', () => {
 
   test('should render empty state message when the world has died', async () => {
     jest.useFakeTimers();
-    const deadWorld = new World([[new Cell(CellState.DEAD)]]);
+    const deadWorld = new World([[new Cell(CellState.dead)]]);
 
     render(
       <LifeWorldProvider valueOverride={{ world: deadWorld }}>
@@ -37,7 +37,7 @@ describe('Board', () => {
   });
 
   test('should render the board when there is an active world', () => {
-    const aliveWorld = new World([[new Cell(CellState.ALIVE)]]);
+    const aliveWorld = new World([[new Cell(CellState.alive)]]);
 
     render(
       <LifeWorldProvider valueOverride={{ world: aliveWorld }}>

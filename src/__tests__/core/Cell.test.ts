@@ -3,7 +3,7 @@ import { Cell, CellState } from '../../core/Cell';
 describe('In the Game of Life, a Cell', () => {
   test('should be correctly instantiated with an initial state', () => {
     // Arrange
-    const initialState = CellState.ALIVE;
+    const initialState = CellState.alive;
 
     // Act
     const cell = new Cell(initialState);
@@ -15,7 +15,7 @@ describe('In the Game of Life, a Cell', () => {
 
   test('dies when it is alive and has fewer than two alive neighbours (Underpopulation)', () => {
     // Arrange
-    const aliveCell = new Cell(CellState.ALIVE);
+    const aliveCell = new Cell(CellState.alive);
     const numberOfAliveNeighbours = 1;
 
     // Act
@@ -27,7 +27,7 @@ describe('In the Game of Life, a Cell', () => {
 
   test('dies when it is alive and has more than three alive neighbours (Overcrowding)', () => {
     // Arrange
-    const aliveCell = new Cell(CellState.ALIVE);
+    const aliveCell = new Cell(CellState.alive);
     const numberOfAliveNeighbours = 4;
 
     // Act
@@ -42,7 +42,7 @@ describe('In the Game of Life, a Cell', () => {
       'stays alive when it has $neighbours alive neighbours',
       ({ neighbours }) => {
         // Arrange
-        const aliveCell = new Cell(CellState.ALIVE);
+        const aliveCell = new Cell(CellState.alive);
 
         // Act
         const nextGenerationCell = aliveCell.regenerate(neighbours);
@@ -55,7 +55,7 @@ describe('In the Game of Life, a Cell', () => {
 
   test('becomes alive when it is dead and has exactly three alive neighbours (Rebirth)', () => {
     // Arrange
-    const deadCell = new Cell(CellState.DEAD);
+    const deadCell = new Cell(CellState.dead);
     const numberOfAliveNeighbours = 3;
 
     // Act

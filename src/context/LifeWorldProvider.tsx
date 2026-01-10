@@ -2,8 +2,8 @@ import { createContext, useContext, useState, useMemo, useCallback, ReactNode } 
 import { Cell, CellState } from '../core/Cell';
 import { World } from '../core/World';
 
-const BOARD_TOTAL_WIDTH = 450;
-const BOARD_TOTAL_HEIGHT = 450;
+const boardTotalWidth = 450;
+const boardTotalHeight = 450;
 
 interface LifeWorldContextType {
   rows: number;
@@ -31,17 +31,22 @@ const LifeWorldProvider = ({
   const [initialConfig, setInitialConfig] = useState('random');
   const [speed, setSpeed] = useState(1);
 
-  const setDimensions = useCallback((newRows: number, newCols: number) => {
-    setRows(newRows);
-    setCols(newCols);
-    const sizeForWidth = BOARD_TOTAL_WIDTH / newCols;
-    const sizeForHeight = BOARD_TOTAL_HEIGHT / newRows;
-    setCellSize(Math.min(sizeForWidth, sizeForHeight));
+  const calculateCellSize = useCallback((totalRows: number, totalCols: number) => {
+    const sizeForWidth = boardTotalWidth / totalCols;
+    const sizeForHeight = boardTotalHeight / totalRows;
+    return Math.min(sizeForWidth, sizeForHeight);
   }, []);
 
-  const createCell = useCallback(() => {
-    return new Cell(Math.random() > 0.5 ? CellState.ALIVE : CellState.DEAD);
+  const createRandomCell = useCallback(() => {
+    return new Cell(Math.random() > 0.5 ? CellState.alive : CellState.dead);
   }, []);
+
+  const generateInitialCells = useCallback(
+    (totalRows: number, totalCols: number) => {
+      return Array.from({ length: totalRows }, () => Array.from({ length: totalCols }, () => createRandomCell()));
+    },
+    [createRandomCell]
+  );
 
   const initializeWorld = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -52,12 +57,14 @@ const LifeWorldProvider = ({
     const newInitialConfig = formData.get('initialConfig') as string;
     const newSpeed = Number(formData.get('speed'));
 
-    setDimensions(newRows, newCols);
+    setRows(newRows);
+    setCols(newCols);
+    setCellSize(calculateCellSize(newRows, newCols));
     setInitialConfig(newInitialConfig);
     setSpeed(newSpeed);
 
-    const cells = Array.from({ length: newRows }, () => Array.from({ length: newCols }, () => createCell()));
-    setWorld(new World(cells));
+    const initialCells = generateInitialCells(newRows, newCols);
+    setWorld(new World(initialCells));
   };
 
   const value = useMemo(

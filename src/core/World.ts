@@ -7,45 +7,38 @@ export class World {
     return this.grid;
   }
 
-  generateNext() {
-    const nextGeneration = this.cells.map((rows, rowIndex) => {
-      return rows.map((cell, colIndex) => {
-        const numberOfAliveNeighbours = this.countAliveNeighbours(rowIndex, colIndex);
-        return cell.regenerate(numberOfAliveNeighbours);
-      });
-    });
+  generateNext(): World {
+    const nextGeneration = this.grid.map((row, rowIndex) =>
+      row.map((cell, columnIndex) => {
+        const aliveNeighbours = this.countAliveNeighbours(rowIndex, columnIndex);
+        return cell.regenerate(aliveNeighbours);
+      })
+    );
     return new World(nextGeneration);
   }
 
-  private countAliveNeighbours(rowIndex: number, colIndex: number): number {
-    const previousRow = this.grid[rowIndex - 1];
-    const sameRow = this.grid[rowIndex];
-    const nextRow = this.grid[rowIndex + 1];
-
-    return (
-      this.countSurroundingRowNeighbours(colIndex, previousRow) +
-      this.countRowNeighbours(colIndex, sameRow) +
-      this.countSurroundingRowNeighbours(colIndex, nextRow)
-    );
+  isDead(): boolean {
+    return this.grid.every((row) => row.every((cell) => !cell.isAlive()));
   }
 
-  private countRowNeighbours(colIndex: number, rowCells: Cell[]) {
-    let numberOfAliveNeighbours = 0;
-    for (let col = colIndex - 1; col <= colIndex + 1; col++) {
-      if (col !== colIndex && rowCells?.[col]?.isAlive()) {
-        numberOfAliveNeighbours++;
-      }
-    }
-    return numberOfAliveNeighbours;
-  }
+  private countAliveNeighbours(rowIndex: number, columnIndex: number): number {
+    const neighbourOffsets = [
+      [-1, -1],
+      [-1, 0],
+      [-1, 1],
+      [0, -1],
+      [0, 1],
+      [1, -1],
+      [1, 0],
+      [1, 1],
+    ];
 
-  private countSurroundingRowNeighbours(colIndex: number, rowCells: Cell[]) {
-    let numberOfAliveNeighbours = 0;
-    for (let col = colIndex - 1; col <= colIndex + 1; col++) {
-      if (rowCells?.[col]?.isAlive()) {
-        numberOfAliveNeighbours++;
-      }
-    }
-    return numberOfAliveNeighbours;
+    return neighbourOffsets.reduce((count, [rowOffset, columnOffset]) => {
+      const neighbourRowIndex = rowIndex + rowOffset;
+      const neighbourColumnIndex = columnIndex + columnOffset;
+      const neighbour = this.grid[neighbourRowIndex]?.[neighbourColumnIndex];
+
+      return neighbour?.isAlive() ? count + 1 : count;
+    }, 0);
   }
 }
