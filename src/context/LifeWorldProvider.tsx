@@ -17,7 +17,13 @@ interface LifeWorldContextType {
 
 const LifeWorldContext = createContext<LifeWorldContextType | undefined>(undefined);
 
-const LifeWorldProvider = ({ children }: { children: ReactNode }) => {
+const LifeWorldProvider = ({
+  children,
+  valueOverride,
+}: {
+  children: ReactNode;
+  valueOverride?: Partial<LifeWorldContextType>;
+}) => {
   const [rows, setRows] = useState(5);
   const [cols, setCols] = useState(5);
   const [cellSize, setCellSize] = useState(1);
@@ -63,8 +69,9 @@ const LifeWorldProvider = ({ children }: { children: ReactNode }) => {
       world,
       cellSize,
       initializeWorld,
+      ...valueOverride,
     }),
-    [rows, cols, initialConfig, world, cellSize, speed]
+    [rows, cols, initialConfig, world, cellSize, speed, valueOverride]
   );
 
   return <LifeWorldContext.Provider value={value}>{children}</LifeWorldContext.Provider>;

@@ -1,39 +1,37 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import Setup from '../../ui/Setup';
-import { useLifeWorldContext } from '../../context/LifeWorldProvider';
-
-jest.mock('../../context/LifeWorldProvider', () => ({
-  useLifeWorldContext: jest.fn(),
-}));
+import { LifeWorldProvider } from '../../context/LifeWorldProvider';
 
 describe('Setup', () => {
-  const mockInitializeWorld = jest.fn((e) => e.preventDefault());
-  const mockDefaultValues = {
-    rows: 10,
-    cols: 10,
-    initialConfig: 'random',
-    speed: 1,
-    initializeWorld: mockInitializeWorld,
-  };
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-    (useLifeWorldContext as jest.Mock).mockReturnValue(mockDefaultValues);
-  });
-
   test('should render all form fields with default values from context', () => {
-    render(<Setup />);
+    const mockValues = {
+      rows: 15,
+      cols: 20,
+      initialConfig: 'glider',
+      speed: 0.5,
+    };
 
-    expect(screen.getByLabelText(/Filas/i)).toHaveValue(10);
-    expect(screen.getByLabelText(/Columnas/i)).toHaveValue(10);
-    expect(screen.getByLabelText(/Configuracion Inicial/i)).toHaveValue('random');
-    expect(screen.getByLabelText(/Velocidad/i)).toHaveValue(1);
+    render(
+      <LifeWorldProvider valueOverride={mockValues}>
+        <Setup />
+      </LifeWorldProvider>
+    );
+
+    expect(screen.getByLabelText(/Filas/i)).toHaveValue(15);
+    expect(screen.getByLabelText(/Columnas/i)).toHaveValue(20);
+    expect(screen.getByLabelText(/Configuracion Inicial/i)).toHaveValue('glider');
+    expect(screen.getByLabelText(/Velocidad/i)).toHaveValue(0.5);
     expect(screen.getByRole('button', { name: /Generar/i })).toBeInTheDocument();
   });
 
   test('should have correct constraints on numeric inputs', () => {
-    render(<Setup />);
+    render(
+      <LifeWorldProvider>
+        <Setup />
+      </LifeWorldProvider>
+    );
 
     const rowsInput = screen.getByLabelText(/Filas/i);
     const speedInput = screen.getByLabelText(/Velocidad/i);
@@ -43,13 +41,18 @@ describe('Setup', () => {
     expect(speedInput).toHaveAttribute('step', '0.1');
   });
 
-  test('should call initializeWorld context function when form is submitted', () => {
-    render(<Setup />);
+  test('should call initializeWorld context function when form is submitted', async () => {
+    const user = userEvent.setup();
+    const mockInitializeWorld = jest.fn((e) => e.preventDefault());
 
-    const form = screen.getByRole('button', { name: /Generar/i }).closest('form');
-    if (!form) throw new Error('Form not found');
+    render(
+      <LifeWorldProvider valueOverride={{ initializeWorld: mockInitializeWorld }}>
+        <Setup />
+      </LifeWorldProvider>
+    );
 
-    fireEvent.submit(form);
+    const generateButton = screen.getByRole('button', { name: /Generar/i });
+    await user.click(generateButton);
 
     expect(mockInitializeWorld).toHaveBeenCalledTimes(1);
   });
