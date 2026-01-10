@@ -1,35 +1,65 @@
 import { useEffect, useState } from 'react';
-import { World } from '../core/World';
-import { Cell, CellState } from '../core/Cell';
+import { useLifeWorldContext } from '../context/LifeWorldProvider';
 
 function Board(): React.ReactNode {
-  const cells = [
-    [new Cell(CellState.DEAD), new Cell(CellState.DEAD), new Cell(CellState.DEAD)],
-    [new Cell(CellState.ALIVE), new Cell(CellState.ALIVE), new Cell(CellState.ALIVE)],
-    [new Cell(CellState.DEAD), new Cell(CellState.DEAD), new Cell(CellState.DEAD)],
-  ];
-  const world = new World(cells);
+  const { world, cellSize, speed } = useLifeWorldContext();
   const [currentWorld, setCurrentWorld] = useState(world);
 
   useEffect(() => {
+    setCurrentWorld(world);
+  }, [world]);
+
+  useEffect(() => {
+    if (!currentWorld) return;
+
     const interval = setInterval(() => {
-      setCurrentWorld(currentWorld.generateNext());
-    }, 1000);
+      setCurrentWorld((prev) => prev?.generateNext());
+    }, speed * 1000);
+
     return () => clearInterval(interval);
+  }, [currentWorld, speed]);
+
+  useEffect(() => {
+    const worldIsDead = currentWorld?.cells.every((row) => row.every((cell) => !cell.isAlive()));
+    if (worldIsDead) {
+      setTimeout(() => {
+        setCurrentWorld(undefined);
+      }, 2000);
+    }
   }, [currentWorld]);
 
+  if (!world) {
+    return <p>Configura los parámetros y pulsa "Generar" para comenzar.</p>;
+  }
+
+  if (!currentWorld) {
+    return (
+      <>
+        <p>El mundo ha muerto.</p>
+        <p>Configura los parámetros y pulsa "Generar" para comenzar de nuevo.</p>
+      </>
+    );
+  }
+
   return (
-    <table>
-      <tbody>
-        {currentWorld.cells.map((row, rowIndex) => (
-          <tr key={rowIndex}>
-            {row.map((cell, colIndex) => (
-              <td key={colIndex}>{cell.render()}</td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <section data-testid="board">
+      {currentWorld.cells.map((row, rowIndex) => (
+        <div key={rowIndex} style={{ display: 'flex', gap: '0' }}>
+          {row.map((cell, colIndex) => (
+            <span
+              key={colIndex}
+              style={{
+                display: 'inline-block',
+                height: `${cellSize}px`,
+                width: `${cellSize}px`,
+                backgroundColor: cell.isAlive() ? 'var(--pico-primary)' : 'transparent',
+                border: '0.1px solid rgba(255,255,255,0.05)',
+              }}
+            />
+          ))}
+        </div>
+      ))}
+    </section>
   );
 }
 
