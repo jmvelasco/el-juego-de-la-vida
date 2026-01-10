@@ -2,35 +2,33 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import Setup from '../../ui/Setup';
-import { LifeWorldProvider } from '../../context/LifeWorldProvider';
+import { WorldOfLifeProvider } from '../../context/WorldOfLifeProvider';
 
 describe('Setup', () => {
   test('should render all form fields with default values from context', () => {
     const mockValues = {
       rows: 15,
       cols: 20,
-      initialConfig: 'glider',
       speed: 0.5,
     };
 
     render(
-      <LifeWorldProvider valueOverride={mockValues}>
+      <WorldOfLifeProvider injectedValuesOverriden={mockValues}>
         <Setup />
-      </LifeWorldProvider>
+      </WorldOfLifeProvider>
     );
 
     expect(screen.getByLabelText(/Filas/i)).toHaveValue(15);
     expect(screen.getByLabelText(/Columnas/i)).toHaveValue(20);
-    expect(screen.getByLabelText(/Configuracion Inicial/i)).toHaveValue('glider');
     expect(screen.getByLabelText(/Velocidad/i)).toHaveValue(0.5);
     expect(screen.getByRole('button', { name: /Generar/i })).toBeInTheDocument();
   });
 
   test('should have correct constraints on numeric inputs', () => {
     render(
-      <LifeWorldProvider>
+      <WorldOfLifeProvider>
         <Setup />
-      </LifeWorldProvider>
+      </WorldOfLifeProvider>
     );
 
     const rowsInput = screen.getByLabelText(/Filas/i);
@@ -46,9 +44,9 @@ describe('Setup', () => {
     const mockInitializeWorld = jest.fn((e) => e.preventDefault());
 
     render(
-      <LifeWorldProvider valueOverride={{ initializeWorld: mockInitializeWorld }}>
+      <WorldOfLifeProvider injectedValuesOverriden={{ initialize: mockInitializeWorld }}>
         <Setup />
-      </LifeWorldProvider>
+      </WorldOfLifeProvider>
     );
 
     const generateButton = screen.getByRole('button', { name: /Generar/i });

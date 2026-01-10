@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useLifeWorldContext } from '../context/LifeWorldProvider';
+import { useWorldOfLifeContext } from '../context/WorldOfLifeProvider';
 
 const Board = (): React.ReactNode => {
-  const { world, cellSize, speed } = useLifeWorldContext();
+  const { world, cellSize, speed } = useWorldOfLifeContext();
   const [currentWorld, setCurrentWorld] = useState(world);
 
   useEffect(() => {

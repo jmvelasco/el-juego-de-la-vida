@@ -1,16 +1,16 @@
 import { render, screen, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Board from '../../ui/Board';
-import { LifeWorldProvider } from '../../context/LifeWorldProvider';
 import { World } from '../../core/World';
 import { Cell, CellState } from '../../core/Cell';
+import { WorldOfLifeProvider } from '../../context/WorldOfLifeProvider';
 
 describe('Board', () => {
   test('should render setup message when world is not initialized', () => {
     render(
-      <LifeWorldProvider valueOverride={{ world: undefined }}>
+      <WorldOfLifeProvider injectedValuesOverriden={{ world: undefined }}>
         <Board />
-      </LifeWorldProvider>
+      </WorldOfLifeProvider>
     );
 
     expect(screen.getByText(/Configura los parámetros/i)).toBeInTheDocument();
@@ -22,9 +22,9 @@ describe('Board', () => {
     const deadWorld = new World([[new Cell(CellState.dead)]]);
 
     render(
-      <LifeWorldProvider valueOverride={{ world: deadWorld }}>
+      <WorldOfLifeProvider injectedValuesOverriden={{ world: deadWorld }}>
         <Board />
-      </LifeWorldProvider>
+      </WorldOfLifeProvider>
     );
 
     act(() => {
@@ -40,9 +40,9 @@ describe('Board', () => {
     const aliveWorld = new World([[new Cell(CellState.alive)]]);
 
     render(
-      <LifeWorldProvider valueOverride={{ world: aliveWorld }}>
+      <WorldOfLifeProvider injectedValuesOverriden={{ world: aliveWorld }}>
         <Board />
-      </LifeWorldProvider>
+      </WorldOfLifeProvider>
     );
 
     const gridElement = screen.getByTestId('board');

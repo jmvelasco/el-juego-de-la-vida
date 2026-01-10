@@ -1,11 +1,11 @@
-import { LifeWorldProvider } from './context/LifeWorldProvider';
+import { WorldOfLifeProvider } from './context/WorldOfLifeProvider';
 import Board from './ui/Board';
 import Setup from './ui/Setup';
 
 const App = (): React.ReactNode => {
   return (
     <>
-      <LifeWorldProvider>
+      <WorldOfLifeProvider>
         <main style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1rem' }}>
           <div style={{ padding: '3rem', backgroundColor: 'var(--pico-secondary-background)' }}>
             <h3>Configuración</h3>
@@ -25,7 +25,7 @@ const App = (): React.ReactNode => {
             <Board />
           </div>
         </main>
-      </LifeWorldProvider>
+      </WorldOfLifeProvider>
     </>
   );
 };

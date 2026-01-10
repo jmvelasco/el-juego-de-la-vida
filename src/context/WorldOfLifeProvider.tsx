@@ -2,36 +2,33 @@ import { createContext, useContext, useState, useMemo, useCallback, ReactNode } 
 import { Cell, CellState } from '../core/Cell';
 import { World } from '../core/World';
 
-const boardTotalWidth = 450;
-const boardTotalHeight = 450;
-
-interface LifeWorldContextType {
+interface WorldOfLifeContextType {
   rows: number;
   cols: number;
   cellSize: number;
-  initialConfig: string;
   speed: number;
   world: World | undefined;
-  initializeWorld: (event: React.FormEvent<HTMLFormElement>) => void;
+  initialize: (event: React.FormEvent<HTMLFormElement>) => void;
 }
 
-const LifeWorldContext = createContext<LifeWorldContextType | undefined>(undefined);
+const WorldOfLifeContext = createContext<WorldOfLifeContextType | undefined>(undefined);
 
-const LifeWorldProvider = ({
+const WorldOfLifeProvider = ({
   children,
-  valueOverride,
+  injectedValuesOverriden,
 }: {
   children: ReactNode;
-  valueOverride?: Partial<LifeWorldContextType>;
+  injectedValuesOverriden?: Partial<WorldOfLifeContextType>;
 }) => {
   const [rows, setRows] = useState(5);
   const [cols, setCols] = useState(5);
   const [cellSize, setCellSize] = useState(1);
   const [world, setWorld] = useState<World | undefined>();
-  const [initialConfig, setInitialConfig] = useState('random');
   const [speed, setSpeed] = useState(1);
 
   const calculateCellSize = useCallback((totalRows: number, totalCols: number) => {
+    const boardTotalWidth = 450;
+    const boardTotalHeight = 450;
     const sizeForWidth = boardTotalWidth / totalCols;
     const sizeForHeight = boardTotalHeight / totalRows;
     return Math.min(sizeForWidth, sizeForHeight);
@@ -48,48 +45,42 @@ const LifeWorldProvider = ({
     [createRandomCell]
   );
 
-  const initializeWorld = (event: React.FormEvent<HTMLFormElement>) => {
+  const initialize = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-
     const newRows = Number(formData.get('rows'));
     const newCols = Number(formData.get('cols'));
-    const newInitialConfig = formData.get('initialConfig') as string;
     const newSpeed = Number(formData.get('speed'));
 
     setRows(newRows);
     setCols(newCols);
     setCellSize(calculateCellSize(newRows, newCols));
-    setInitialConfig(newInitialConfig);
     setSpeed(newSpeed);
-
-    const initialCells = generateInitialCells(newRows, newCols);
-    setWorld(new World(initialCells));
+    setWorld(new World(generateInitialCells(newRows, newCols)));
   };
 
   const value = useMemo(
     () => ({
       rows,
       cols,
-      initialConfig,
       speed,
       world,
       cellSize,
-      initializeWorld,
-      ...valueOverride,
+      initialize,
+      ...injectedValuesOverriden,
     }),
-    [rows, cols, initialConfig, world, cellSize, speed, valueOverride]
+    [rows, cols, world, cellSize, speed, injectedValuesOverriden]
   );
 
-  return <LifeWorldContext.Provider value={value}>{children}</LifeWorldContext.Provider>;
+  return <WorldOfLifeContext.Provider value={value}>{children}</WorldOfLifeContext.Provider>;
 };
 
-const useLifeWorldContext = () => {
-  const context = useContext(LifeWorldContext);
+const useWorldOfLifeContext = () => {
+  const context = useContext(WorldOfLifeContext);
   if (!context) {
     throw new Error('useLifeWorldContext must be used within a LifeWorldProvider');
   }
   return context;
 };
 
-export { LifeWorldProvider, useLifeWorldContext };
+export { WorldOfLifeProvider, useWorldOfLifeContext };
