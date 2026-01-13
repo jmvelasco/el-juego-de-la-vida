@@ -17,10 +17,6 @@ export class World {
     return new World(nextGeneration);
   }
 
-  isDead(): boolean {
-    return this.grid.every((row) => row.every((cell) => !cell.isAlive()));
-  }
-
   private countAliveNeighbours(rowIndex: number, columnIndex: number): number {
     const neighbourOffsets = [
       [-1, -1],
@@ -40,5 +36,9 @@ export class World {
 
       return neighbour?.isAlive() ? count + 1 : count;
     }, 0);
+  }
+
+  isDead(): boolean {
+    return this.grid.every((row) => row.every((cell) => !cell.isAlive()));
   }
 }

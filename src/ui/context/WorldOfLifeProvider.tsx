@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useMemo, useCallback, ReactNode } from 'react';
-import { Cell, CellState } from '../core/Cell';
-import { World } from '../core/World';
+import { Cell, CellState } from '../../core/Cell';
+import { World } from '../../core/World';
 
 interface WorldOfLifeContextType {
   rows: number;

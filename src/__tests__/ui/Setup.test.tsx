@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import Setup from '../../ui/Setup';
-import { WorldOfLifeProvider } from '../../context/WorldOfLifeProvider';
+import { WorldOfLifeProvider } from '../../ui/context/WorldOfLifeProvider';
 
 describe('Setup', () => {
   test('should render all form fields with default values from context', () => {

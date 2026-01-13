@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import Board from '../../ui/Board';
 import { World } from '../../core/World';
 import { Cell, CellState } from '../../core/Cell';
-import { WorldOfLifeProvider } from '../../context/WorldOfLifeProvider';
+import { WorldOfLifeProvider } from '../../ui/context/WorldOfLifeProvider';
 
 describe('Board', () => {
   test('should render setup message when world is not initialized', () => {
@@ -28,7 +28,7 @@ describe('Board', () => {
     );
 
     act(() => {
-      jest.advanceTimersByTime(2050);
+      jest.advanceTimersByTime(2000);
     });
 
     const message = await screen.findByText(/El mundo ha muerto/i);

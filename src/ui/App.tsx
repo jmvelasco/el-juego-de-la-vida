@@ -1,6 +1,6 @@
 import { WorldOfLifeProvider } from './context/WorldOfLifeProvider';
-import Board from './ui/Board';
-import Setup from './ui/Setup';
+import Board from './Board';
+import Setup from './Setup';
 
 const App = (): React.ReactNode => {
   return (

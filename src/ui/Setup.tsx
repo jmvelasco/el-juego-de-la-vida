@@ -1,4 +1,4 @@
-import { useWorldOfLifeContext } from '../context/WorldOfLifeProvider';
+import { useWorldOfLifeContext } from './context/WorldOfLifeProvider';
 
 const Setup = (): React.ReactNode => {
   const { rows, cols, speed, initialize } = useWorldOfLifeContext();

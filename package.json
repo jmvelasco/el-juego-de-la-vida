@@ -6,7 +6,7 @@
     "prepare": "husky install",
     "dev": "tsc --watch",
     "dev:ui": "npm-run-all --parallel build:ui:watch serve",
-    "build:ui": "esbuild src/index.tsx --bundle --outfile=dist/bundle.js",
+    "build:ui": "esbuild src/ui/index.tsx --bundle --outfile=dist/bundle.js",
     "build:ui:watch": "npm run build:ui -- --watch",
     "serve": "live-server --port=3000 --entry-file=index.html",
     "build": "npm run clean && tsc -b",
