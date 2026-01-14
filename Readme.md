@@ -114,14 +114,7 @@ Como expertos en QA, detectamos la necesidad de validar que la capa de UI (React
 npm test    # Ejecuta todos los tests, incluyendo el nuevo App.test.tsx
 ```
 
-### 8. Estado Global con Context API
-
-Para evitar el "prop drilling" y centralizar la lógica de configuración del mundo (filas, columnas, velocidad), implementamos un Contexto:
-
-- **`LifeWorldProvider`**: Envuelve la aplicación y gestiona el estado compartido.
-- **`useLifeWorldContext`**: Hook personalizado para acceder de forma sencilla a los parámetros y funciones del juego.
-
-### 9. Estilado con Pico.css
+### 8. Estilado con Pico.css
 
 En lugar de pesadas librerías de componentes o configuraciones complejas de CSS Modules, optamos por **Pico.css**:
 
