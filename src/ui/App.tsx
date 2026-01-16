@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { Cell, CellState } from '../core/Cell';
 import { World } from '../core/World';
 import styles from './App.module.css';
+import { SetupForm } from './components/SetupForm';
+import { Board } from './components/Board';
 
 const calculateCellSize = (totalRows: number, totalCols: number) => {
   const boardTotalWidth = 450;
@@ -53,48 +55,10 @@ const App = (): React.ReactNode => {
 
   return (
     <main className={styles.mainContainer}>
-      <aside className={styles.settingsPanel}>
-        <h3>Configuración</h3>
-        <form onSubmit={initialize} className={styles.settingsForm}>
-          <label htmlFor="rows">Filas</label>
-          <input id="rows" name="rows" type="number" defaultValue={5} min="1" />
-
-          <label htmlFor="cols">Columnas</label>
-          <input id="cols" name="cols" type="number" defaultValue={5} min="1" />
-
-          <label htmlFor="speed">Velocidad (segundos)</label>
-          <input id="speed" name="speed" type="number" defaultValue={0.1} step="0.1" min="0.1" />
-
-          <button type="submit">Generar</button>
-        </form>
-      </aside>
+      <SetupForm onInitialize={initialize} />
       <div className={styles.boardContainer}>
         <h1>El Juego de la Vida</h1>
-        {!game?.world && <p>Configura los parámetros y pulsa "Generar" para comenzar</p>}
-        <section data-testid="board">
-          {game?.world?.isDead() ? (
-            <div className={styles.emptyWorldMessage}>
-              <h3>El mundo ha muerto</h3>
-              <p>Configura los parámetros y pulsa "Generar" para comenzar de nuevo</p>
-            </div>
-          ) : (
-            game?.world.cells.map((row, rowIndex) => (
-              <div key={rowIndex} className={styles.gridRow}>
-                {row.map((cell, columnIndex) => (
-                  <span
-                    key={columnIndex}
-                    className={styles.gridCell}
-                    style={{
-                      height: `${game?.cellSize}px`,
-                      width: `${game?.cellSize}px`,
-                      backgroundColor: cell.isAlive() ? 'var(--pico-primary)' : 'transparent',
-                    }}
-                  />
-                ))}
-              </div>
-            ))
-          )}
-        </section>
+        <Board world={game?.world} cellSize={game?.cellSize ?? 0} />
       </div>
     </main>
   );
