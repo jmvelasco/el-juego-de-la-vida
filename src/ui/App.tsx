@@ -1,42 +1,42 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Cell, CellState } from '../core/Cell';
 import { World } from '../core/World';
+import styles from './App.module.css';
+
+const calculateCellSize = (totalRows: number, totalCols: number) => {
+  const boardTotalWidth = 450;
+  const boardTotalHeight = 450;
+  const sizeForWidth = boardTotalWidth / totalCols;
+  const sizeForHeight = boardTotalHeight / totalRows;
+  return Math.min(sizeForWidth, sizeForHeight);
+};
+
+const createRandomCell = () => {
+  return new Cell(Math.random() > 0.5 ? CellState.alive : CellState.dead);
+};
+
+const generateInitialCells = (totalRows: number, totalCols: number) => {
+  return Array.from({ length: totalRows }, () => Array.from({ length: totalCols }, () => createRandomCell()));
+};
+
+type GameState = {
+  world: World;
+  cellSize: number;
+  speed: number;
+};
 
 const App = (): React.ReactNode => {
-  const [rows, setRows] = useState(5);
-  const [cols, setCols] = useState(5);
-  const [cellSize, setCellSize] = useState(1);
-  const [speed, setSpeed] = useState(0.1);
-  const [currentWorld, setCurrentWorld] = useState<World | undefined>();
+  const [game, setGame] = useState<GameState | undefined>();
 
   useEffect(() => {
-    if (!currentWorld) return;
+    if (!game?.world) return;
 
     const interval = setInterval(() => {
-      setCurrentWorld((previousWorld) => previousWorld?.generateNext());
-    }, speed * 1000);
+      setGame({ ...game, world: game.world.generateNext() });
+    }, game.speed * 1000);
 
     return () => clearInterval(interval);
-  }, [currentWorld, speed]);
-
-  const calculateCellSize = useCallback((totalRows: number, totalCols: number) => {
-    const boardTotalWidth = 450;
-    const boardTotalHeight = 450;
-    const sizeForWidth = boardTotalWidth / totalCols;
-    const sizeForHeight = boardTotalHeight / totalRows;
-    return Math.min(sizeForWidth, sizeForHeight);
-  }, []);
-
-  const createRandomCell = useCallback(() => {
-    return new Cell(Math.random() > 0.5 ? CellState.alive : CellState.dead);
-  }, []);
-
-  const generateInitialCells = useCallback(
-    (totalRows: number, totalCols: number) => {
-      return Array.from({ length: totalRows }, () => Array.from({ length: totalCols }, () => createRandomCell()));
-    },
-    [createRandomCell]
-  );
+  }, [game]);
 
   const initialize = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -44,68 +44,50 @@ const App = (): React.ReactNode => {
     const newRows = Number(formData.get('rows'));
     const newCols = Number(formData.get('cols'));
     const newSpeed = Number(formData.get('speed'));
-
-    setRows(newRows);
-    setCols(newCols);
-    setCellSize(calculateCellSize(newRows, newCols));
-    setSpeed(newSpeed);
-    setCurrentWorld(new World(generateInitialCells(newRows, newCols)));
+    setGame({
+      world: new World(generateInitialCells(newRows, newCols)),
+      cellSize: calculateCellSize(newRows, newCols),
+      speed: newSpeed,
+    });
   };
 
   return (
-    <main style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1rem' }}>
-      <aside style={{ padding: '3rem', backgroundColor: 'var(--pico-secondary-background)', height: '100vh' }}>
+    <main className={styles.mainContainer}>
+      <aside className={styles.settingsPanel}>
         <h3>Configuración</h3>
-        <form onSubmit={initialize} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', height: 'auto' }}>
+        <form onSubmit={initialize} className={styles.settingsForm}>
           <label htmlFor="rows">Filas</label>
-          <input id="rows" name="rows" type="number" defaultValue={rows} min="1" />
+          <input id="rows" name="rows" type="number" defaultValue={5} min="1" />
 
           <label htmlFor="cols">Columnas</label>
-          <input id="cols" name="cols" type="number" defaultValue={cols} min="1" />
+          <input id="cols" name="cols" type="number" defaultValue={5} min="1" />
 
           <label htmlFor="speed">Velocidad (segundos)</label>
-          <input id="speed" name="speed" type="number" defaultValue={speed} step="0.1" min="0.1" />
+          <input id="speed" name="speed" type="number" defaultValue={0.1} step="0.1" min="0.1" />
 
           <button type="submit">Generar</button>
         </form>
       </aside>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          boxShadow: '0 0 1rem rgba(57, 205, 224, 0.8)',
-          margin: '1rem',
-        }}
-      >
+      <div className={styles.boardContainer}>
         <h1>El Juego de la Vida</h1>
-        {!currentWorld && <p>Configura los parámetros y pulsa "Generar" para comenzar</p>}
+        {!game?.world && <p>Configura los parámetros y pulsa "Generar" para comenzar</p>}
         <section data-testid="board">
-          {currentWorld?.isDead() ? (
-            <div
-              style={{
-                textAlign: 'center',
-                backgroundColor: 'var(--pico-secondary-background)',
-                padding: '1rem',
-                borderRadius: '0.5rem',
-              }}
-            >
+          {game?.world?.isDead() ? (
+            <div className={styles.emptyWorldMessage}>
               <h3>El mundo ha muerto</h3>
               <p>Configura los parámetros y pulsa "Generar" para comenzar de nuevo</p>
             </div>
           ) : (
-            currentWorld?.cells.map((row, rowIndex) => (
-              <div key={rowIndex} style={{ display: 'flex', gap: '0' }}>
+            game?.world.cells.map((row, rowIndex) => (
+              <div key={rowIndex} className={styles.gridRow}>
                 {row.map((cell, columnIndex) => (
                   <span
                     key={columnIndex}
+                    className={styles.gridCell}
                     style={{
-                      display: 'inline-block',
-                      height: `${cellSize}px`,
-                      width: `${cellSize}px`,
+                      height: `${game?.cellSize}px`,
+                      width: `${game?.cellSize}px`,
                       backgroundColor: cell.isAlive() ? 'var(--pico-primary)' : 'transparent',
-                      border: '0.1px solid rgba(255,255,255,0.05)',
                     }}
                   />
                 ))}

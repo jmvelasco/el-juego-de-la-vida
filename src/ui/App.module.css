@@ -1,0 +1,44 @@
+.mainContainer {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 1rem;
+}
+
+.settingsPanel {
+  padding: 3rem;
+  background-color: var(--pico-secondary-background);
+  height: 100vh;
+}
+
+.settingsForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  height: auto;
+}
+
+.boardContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 1rem rgba(57, 205, 224, 0.8);
+  margin: 1rem;
+}
+
+.emptyWorldMessage {
+  text-align: center;
+  background-color: var(--pico-secondary-background);
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.gridRow {
+  display: flex;
+  gap: 0;
+}
+
+.gridCell {
+  display: inline-block;
+  border: 0.1px solid rgba(255, 255, 255, 0.05);
+}
